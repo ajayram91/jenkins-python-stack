@@ -43,14 +43,14 @@ pipeline{
             agent any
             steps{
                 sh "docker build -t ajay-phonebook-app/to-do-repo ."
-                sh "docker tag ajay-phonebook-app/to-do-repo:v2 188358726447.dkr.ecr.us-east-1.amazonaws.com/ajay-phonebook-app/to-do-repo:v2"
+                sh "docker tag ajay-phonebook-app/to-do-repo:v2 188358726447.dkr.ecr.us-east-1.amazonaws.com/ajay-phonebook-app/to-do-repo:latest"
             }
         }
         stage('push'){
             agent any
             steps{
                 sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 188358726447.dkr.ecr.us-east-1.amazonaws.com"
-                sh "docker push 188358726447.dkr.ecr.us-east-1.amazonaws.com/ajay-phonebook-app/to-do-repo:v2"
+                sh "docker push 188358726447.dkr.ecr.us-east-1.amazonaws.com/ajay-phonebook-app/to-do-repo:latest"
             }
         }
 
