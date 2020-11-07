@@ -42,7 +42,7 @@ pipeline{
         stage('build'){
             agent any
             steps{
-                sh "docker build -t ajay/handson-jenkins ."
+                sh "docker build -t ajay-phonebook-app/to-do-repo ."
                 sh "docker tag 188358726447.dkr.ecr.us-east-1.amazonaws.com/ajay-phonebook-app/to-do-repo:latest"
             }
         }
