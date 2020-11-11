@@ -49,7 +49,7 @@ pipeline{
         stage('push'){
             agent any
             steps{
-                sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 188358726447.dkr.ecr.us-east-1.amazonaws.com"
+                sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 188358726447.dkr.ecr.us-east-1.amazonaws.com/ajay-phonebook-app/to-do-repo"
                 sh "docker push 188358726447.dkr.ecr.us-east-1.amazonaws.com/ajay-phonebook-app/to-do-repo:latest"
             }
         }
