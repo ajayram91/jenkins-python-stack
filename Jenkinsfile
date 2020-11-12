@@ -62,24 +62,63 @@ pipeline{
                sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 188358726447.dkr.ecr.us-east-1.amazonaws.com"
                sh "docker-compose up -d"
             }
+        }
         stage('get-keypair'){
             agent any
             steps{
                 sh '''
-                    if [ -f "ajayKey3_public.pem" ]
+                    if [ -f "ajayKey4_public.pem" ]
                     then
                         echo "file exists..."
                     else
                         aws ec2 create-key-pair \
                           --region us-east-1 \
-                          --key-name ajayKey3_public.pem \
+                          --key-name ajayKey4_public.pem \
                           --query KeyMaterial \
-                          --output text > ajayKey3_public.pem
-                        chmod 400 ajayKey3_public.pem
-                        ssh-keygen -y -f ajayKey3_public.pem >> ajayKey3_public.pem
+                          --output text > ajayKey4_public.pem
+                        chmod 400 ajayKey4_public.pem
+                        ssh-keygen -y -f ajayKey4_public.pem >> ajayKey4_public.pem
                     fi
                 '''
               }
-          }    
+          }  
+         
+          stage('create-cluster'){
+            agent any
+            steps{
+                sh '''
+                    #!/bin/sh
+                    running=$(sudo lsof -i:80) || true
+                    if [ "$running" != '' ]
+                    then
+                        docker-compose down
+                        exist="$(aws eks list-clusters | grep ajays-cluster2)" || true
+                        if [ "$exist" == '' ]
+                        then
+                            eksctl create cluster \
+                                --name ajays-cluster2 \
+                                --version 1.18 \
+                                --region us-east-1 \
+                                --nodegroup-name my-nodes \
+                                --node-type t2.small \
+                                --nodes 1 \
+                                --nodes-min 1 \
+                                --nodes-max 2 \
+                                --ssh-access \
+                                --ssh-public-key  ajayKey4_public.pem \
+                                --managed
+                        else
+                            echo 'no need to create cluster...'
+                        fi
+                    else
+                        echo 'app is not running with docker-compose up -d'
+                    fi
+                '''
+            }
+         } 
+
+
+
         }
+
     }
