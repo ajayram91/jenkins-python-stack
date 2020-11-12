@@ -67,17 +67,17 @@ pipeline{
             agent any
             steps{
                 sh '''
-                    if [ -f "ajayKey10_public.pem" ]
+                    if [ -f "ajayKey23_public.pem" ]
                     then
                         echo "file exists..."
                     else
                         aws ec2 create-key-pair \
                           --region us-east-1 \
-                          --key-name ajayKey7.pem \
+                          --key-name ajayKey11.pem \
                           --query KeyMaterial \
-                          --output text > ajayKey7.pem
-                        chmod 400 ajayKey7.pem
-                        ssh-keygen -y -f ajayKey7.pem >> ajayKey10_public.pem
+                          --output text > ajayKey11.pem
+                        chmod 400 ajayKey11.pem
+                        ssh-keygen -y -f ajayKey11.pem >> ajayKey23_public.pem
                     fi
                 '''
               }
@@ -92,11 +92,11 @@ pipeline{
                     if [ "$running" != '' ]
                     then
                         docker-compose down
-                        exist="$(aws eks list-clusters | grep ajays-cluster2)" || true
+                        exist="$(aws eks list-clusters | grep ajays-cluster)" || true
                         if [ "$exist" == '' ]
                         then
                             eksctl create cluster \
-                                --name ajays-cluster2 \
+                                --name ajays-cluster \
                                 --version 1.18 \
                                 --region us-east-1 \
                                 --nodegroup-name my-nodes \
@@ -105,7 +105,7 @@ pipeline{
                                 --nodes-min 1 \
                                 --nodes-max 2 \
                                 --ssh-access \
-                                --ssh-public-key  ajayKey10_public.pem \
+                                --ssh-public-key  ajayKey23_public.pem \
                                 --managed
                         else
                             echo 'no need to create cluster...'
