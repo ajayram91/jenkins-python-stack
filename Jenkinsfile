@@ -67,17 +67,17 @@ pipeline{
             agent any
             steps{
                 sh '''
-                    if [ -f "ajayKey4_public.pem" ]
+                    if [ -f "ajayKey5_public.pem" ]
                     then
                         echo "file exists..."
                     else
                         aws ec2 create-key-pair \
                           --region us-east-1 \
-                          --key-name ajayKey4_public.pem \
+                          --key-name ajayKey5.pem \
                           --query KeyMaterial \
-                          --output text > ajayKey4_public.pem
-                        chmod 400 ajayKey4_public.pem
-                        ssh-keygen -y -f ajayKey4_public.pem >> ajayKey4_public.pem
+                          --output text > ajayKey5.pem
+                        chmod 400 ajayKey5.pem
+                        ssh-keygen -y -f ajayKey5.pem >> ajayKey5_public.pem
                     fi
                 '''
               }
