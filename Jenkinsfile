@@ -67,7 +67,7 @@ pipeline{
             agent any
             steps{
                 sh '''
-                    if [ -f "ajayKey6_public.pem" ]
+                    if [ -f "ajayKey7_public.pem" ]
                     then
                         echo "file exists..."
                     else
@@ -77,7 +77,7 @@ pipeline{
                           --query KeyMaterial \
                           --output text > ajayKey6.pem
                         chmod 400 ajayKey6.pem
-                        ssh-keygen -y -f ajayKey6.pem >> ajayKey6_public.pem
+                        ssh-keygen -y -f ajayKey6.pem >> ajayKey7_public.pem
                     fi
                 '''
               }
@@ -105,7 +105,7 @@ pipeline{
                                 --nodes-min 1 \
                                 --nodes-max 2 \
                                 --ssh-access \
-                                --ssh-public-key  ajayKey6_public.pem \
+                                --ssh-public-key  ajayKey7_public.pem \
                                 --managed
                         else
                             echo 'no need to create cluster...'
