@@ -67,17 +67,18 @@ pipeline{
             agent any
             steps{
                 sh '''
-                    if [ -f "ajayKey32_public.pem" ]
+                    if [ -f "ajayKey1_public.pem" ]
                     then
                         echo "file exists..."
                     else
                         aws ec2 create-key-pair \
                           --region us-east-1 \
-                          --key-name ajayKey12.pem \
+                          --key-name ajayKey1.pem \
                           --query KeyMaterial \
-                          --output text > ajayKey12.pem
-                        chmod 400 ajayKey12.pem
-                        ssh-keygen -y -f ajayKey12.pem >> ajayKey32_public.pem
+                          --output text > ajayKey1.pem
+                        chmod 400 ajayKey1.pem
+                        ssh-keygen -y -f ajayKey1.pem >> ajayKey1_public.pem
+                        chmod 400 ajayKey1_public.pem
                     fi
                 '''
               }
@@ -105,7 +106,7 @@ pipeline{
                                 --nodes-min 1 \
                                 --nodes-max 2 \
                                 --ssh-access \
-                                --ssh-public-key  ajayKey32_public.pem \
+                                --ssh-public-key  ajayKey1_public.pem \
                                 --managed
                         else
                         echo 'Check the cluster script'
