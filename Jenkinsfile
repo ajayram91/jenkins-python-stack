@@ -67,17 +67,17 @@ pipeline{
             agent any
             steps{
                 sh '''
-                    if [ -f "ajayKey23_public.pem" ]
+                    if [ -f "ajayKey32_public.pem" ]
                     then
                         echo "file exists..."
                     else
                         aws ec2 create-key-pair \
                           --region us-east-1 \
-                          --key-name ajayKey11.pem \
+                          --key-name ajayKey12.pem \
                           --query KeyMaterial \
-                          --output text > ajayKey11.pem
-                        chmod 400 ajayKey11.pem
-                        ssh-keygen -y -f ajayKey11.pem >> ajayKey23_public.pem
+                          --output text > ajayKey12.pem
+                        chmod 400 ajayKey12.pem
+                        ssh-keygen -y -f ajayKey12.pem >> ajayKey32_public.pem
                     fi
                 '''
               }
@@ -105,10 +105,10 @@ pipeline{
                                 --nodes-min 1 \
                                 --nodes-max 2 \
                                 --ssh-access \
-                                --ssh-public-key  ajayKey23_public.pem \
+                                --ssh-public-key  ajayKey32_public.pem \
                                 --managed
                         else
-                            echo 'no need to create cluster...'
+                        echo 'Check the cluster script'
                         fi
                     else
                         echo 'app is not running with docker-compose up -d'
