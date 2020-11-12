@@ -63,5 +63,26 @@ pipeline{
                sh "docker-compose up -d"
             }
         }
+
+   stage('get-keypair'){
+            agent any
+            steps{
+                sh '''
+                    if [ -f "ajayKey3_public.pem" ]
+                    then
+                        echo "file exists..."
+                    else
+                        aws ec2 create-key-pair \
+                          --region us-east-1 \
+                          --key-name ajayKey3_public.pem \
+                          --query KeyMaterial \
+                          --output text > ajayKey3_public.pem
+                        chmod 400 ajayKey3_public.pem
+                        ssh-keygen -y -f ajayKey3_public.pem >> ajayKey3_public.pem
+                    fi
+                '''
+              }
+        }
     }
+
 }
